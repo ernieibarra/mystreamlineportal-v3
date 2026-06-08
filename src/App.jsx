@@ -354,12 +354,13 @@ function ManagedForm({ children, formName, formType, submitLabel }) {
 
   async function handleSubmit(event) {
     event.preventDefault()
+    const formElement = event.currentTarget
     setStatus('loading')
     setMessage('')
 
     try {
-      await submitNetlifyForm(formName, new FormData(event.currentTarget))
-      event.currentTarget.reset()
+      await submitNetlifyForm(formName, new FormData(formElement))
+      formElement.reset()
       setStatus('success')
       setMessage(`Thank you. Your ${formType} was submitted successfully.`)
     } catch (error) {
