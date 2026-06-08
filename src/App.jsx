@@ -330,32 +330,19 @@ function CheckboxInput({ label, name }) {
   )
 }
 
-async function submitSecureForm(formType, formData) {
-  const payload = Object.fromEntries(formData.entries())
-
-  /*
-    Connect this to a protected backend or Netlify Function before production:
-    POST /.netlify/functions/send-team-email
-    The serverless function should read provider credentials from environment
-    variables, validate the request, and send notifications to TEAM_EMAIL.
-    Never place SMTP settings, tokens, or private CRM details in React code.
-  */
-  const response = await fetch('/.netlify/functions/send-team-email', {
+async function submitNetlifyForm(formData) {
+  const response = await fetch('/', {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      formType,
-      to: TEAM_EMAIL,
-      payload,
-    }),
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: new URLSearchParams(formData).toString(),
   })
 
   if (!response.ok) {
-    throw new Error('Email function is not configured yet.')
+    throw new Error('Netlify could not accept the form submission.')
   }
 }
 
-function ManagedForm({ children, formType, submitLabel }) {
+function ManagedForm({ children, formName, formType, submitLabel }) {
   const [status, setStatus] = useState('idle')
   const [message, setMessage] = useState('')
 
@@ -365,20 +352,35 @@ function ManagedForm({ children, formType, submitLabel }) {
     setMessage('')
 
     try {
-      await submitSecureForm(formType, new FormData(event.currentTarget))
+      await submitNetlifyForm(new FormData(event.currentTarget))
       event.currentTarget.reset()
       setStatus('success')
-      setMessage(`Thank you. Your ${formType} was submitted to ${TEAM_EMAIL}.`)
+      setMessage(`Thank you. Your ${formType} was submitted successfully.`)
     } catch (error) {
       setStatus('error')
       setMessage(
-        `${error.message} The form is ready for a secure serverless email handler before launch.`,
+        `${error.message} Please try again or contact ${TEAM_EMAIL}.`,
       )
     }
   }
 
   return (
-    <form className="form-panel" onSubmit={handleSubmit}>
+    <form
+      className="form-panel"
+      data-netlify="true"
+      method="POST"
+      name={formName}
+      netlify-honeypot="bot-field"
+      onSubmit={handleSubmit}
+    >
+      <input name="form-name" type="hidden" value={formName} />
+      <input name="formType" type="hidden" value={formType} />
+      <p className="hidden-field">
+        <label>
+          Do not fill this out if you are human:
+          <input name="bot-field" />
+        </label>
+      </p>
       {children}
       <button className="btn primary form-submit" disabled={status === 'loading'} type="submit">
         {status === 'loading' ? 'Submitting...' : submitLabel}
@@ -395,7 +397,11 @@ function IntakeFormPage() {
       title="Client Intake Form"
       text="Submit client information through a secure backend email workflow for NewGen Leadership review."
     >
-      <ManagedForm formType="client intake form" submitLabel="Submit Intake">
+      <ManagedForm
+        formName="newgen-intake-form"
+        formType="client intake form"
+        submitLabel="Submit Intake"
+      >
         <FormSection title="Proposed Insured">
           <TextInput label="First Name" name="proposedInsuredFirstName" required />
           <TextInput label="Middle Initial" name="proposedInsuredMiddleInitial" />
@@ -596,7 +602,11 @@ function AppointmentsPage() {
           <span>Client Appointments</span>
           <span>Team Meetings</span>
         </aside>
-        <ManagedForm formType="appointment request" submitLabel="Request Appointment">
+        <ManagedForm
+          formName="newgen-appointment-form"
+          formType="appointment request"
+          submitLabel="Request Appointment"
+        >
           <FormSection title="Appointment Details">
             <TextInput label="Name" name="name" required />
             <TextInput label="Email" name="email" type="email" required />

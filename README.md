@@ -16,27 +16,25 @@ npm run lint
 npm run build
 ```
 
-## Netlify Email Function
+## Netlify Forms
 
-Both website forms post to:
+The site uses Netlify Forms. No Resend, SendGrid, SMTP, or custom email API is required.
 
-```text
-/.netlify/functions/send-team-email
-```
-
-The function lives at:
+Active form names:
 
 ```text
-netlify/functions/send-team-email.js
+newgen-intake-form
+newgen-appointment-form
 ```
 
-It sends all notifications to `team@newgenreservices.com` and ignores any frontend `to` value.
+The React forms submit URL-encoded form data to Netlify. Hidden static versions of both forms are included in `index.html` so Netlify can detect them during production deploy.
 
-Set these Netlify environment variables before using live email:
+After deployment, configure email notifications in Netlify:
 
-```text
-RESEND_API_KEY=your_resend_api_key
-EMAIL_FROM=NewGen Portal <portal@mystreamlineportal.com>
-```
+1. Open the Netlify site dashboard.
+2. Go to Forms.
+3. Confirm `newgen-intake-form` and `newgen-appointment-form` appear after a deploy.
+4. Open each form and add an email notification.
+5. Set the notification recipient to `team@newgenreservices.com`.
 
-`EMAIL_FROM` must be a sender address verified with the email provider. Do not add SMTP passwords, API keys, or private tokens to frontend code.
+Do not add SMTP passwords, API keys, or private tokens to frontend code.

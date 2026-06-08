@@ -543,6 +543,10 @@
   padding: clamp(22px, 4vw, 36px);
 }
 
+.hidden-field {
+  display: none;
+}
+
 fieldset {
   border: 0;
   border-top: 1px solid var(--border);
