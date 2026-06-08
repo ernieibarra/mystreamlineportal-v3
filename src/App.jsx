@@ -330,7 +330,13 @@ function CheckboxInput({ label, name }) {
   )
 }
 
-async function submitNetlifyForm(formData) {
+async function submitNetlifyForm(formName, formData) {
+  formData.set('form-name', formName)
+
+  if (!formData.has('bot-field')) {
+    formData.set('bot-field', '')
+  }
+
   const response = await fetch('/', {
     method: 'POST',
     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
@@ -352,7 +358,7 @@ function ManagedForm({ children, formName, formType, submitLabel }) {
     setMessage('')
 
     try {
-      await submitNetlifyForm(new FormData(event.currentTarget))
+      await submitNetlifyForm(formName, new FormData(event.currentTarget))
       event.currentTarget.reset()
       setStatus('success')
       setMessage(`Thank you. Your ${formType} was submitted successfully.`)
@@ -366,6 +372,7 @@ function ManagedForm({ children, formName, formType, submitLabel }) {
 
   return (
     <form
+      action="/"
       className="form-panel"
       data-netlify="true"
       method="POST"
