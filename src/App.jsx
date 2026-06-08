@@ -55,22 +55,328 @@ const quickAccess = [
   },
 ]
 
-const resourceCards = [
-  ['Scripts', 'Call flows, objection handling, and client conversation tools.'],
-  ['Client Guides', 'Helpful education pieces and client-facing reference material.'],
-  ['Product Documents', 'Carrier, product, and compliance documents for team use.'],
-  ['Templates', 'Email, text, worksheet, and workflow templates.'],
-  ['Important Links', 'Frequently used systems, calculators, and support links.'],
-  ['Team Announcements', 'Updates, reminders, and leadership communication.'],
+const driveResources = {
+  onboardingSchool: {
+    name: 'Onboarding School',
+    type: 'Google Docs',
+    url: 'https://drive.google.com/file/d/1BEa4mMUfmQWg4ZbBzgkHqFK6H0ebUVeY2K4E8fia2VA/view',
+  },
+  orientationPart1: {
+    name: 'Orientation Class Part I',
+    type: 'PowerPoint',
+    url: 'https://drive.google.com/file/d/1bYiN4HQ9hjUkkx3ruodMksEycoFE0gJ0/view',
+  },
+  orientationPart2: {
+    name: 'Orientation Class Part II',
+    type: 'Unknown',
+    url: 'https://drive.google.com/file/d/1bAGnSOEAgXgbkXd3PxMBhHPZfD6nV4CG/view',
+  },
+  orientationInProgress: {
+    name: 'Orientation Class In Progress',
+    type: 'PowerPoint',
+    url: 'https://drive.google.com/file/d/19c9PYRPneNUbvB2Qv5PlPqrEUnSuAOhm/view',
+  },
+  onboarding1: {
+    name: 'Onboarding 1 In Progress',
+    type: 'PowerPoint',
+    url: 'https://drive.google.com/file/d/1XPzWpJzy3qRqpHwEu6zuCRu4p4JsqUOY/view',
+  },
+  onboarding2: {
+    name: 'Onboarding 2 Updated',
+    type: 'PowerPoint',
+    url: 'https://drive.google.com/file/d/1O6R10JmcQ6cWLsIntrU6ky7piYSQPsNU/view',
+  },
+  onboarding3: {
+    name: 'Onboarding 3 In Progress',
+    type: 'PowerPoint',
+    url: 'https://drive.google.com/file/d/1rYeibhcCV5OOut4uqMJFJC_SIh4bQg5W/view',
+  },
+  week1: {
+    name: 'Week 1 Onboarding',
+    type: 'PowerPoint',
+    url: 'https://drive.google.com/file/d/108sRmbCJmuScQKp8Ux0OCjxLnxFbOLu1/view',
+  },
+  week2: {
+    name: 'Week 2 Onboarding',
+    type: 'PowerPoint',
+    url: 'https://drive.google.com/file/d/1X8z33KZ5Fl5L3ORD2NxXyFlr3rJt_HOX/view',
+  },
+  week3: {
+    name: 'Week 3 Onboarding',
+    type: 'PowerPoint',
+    url: 'https://drive.google.com/file/d/1EPAA-ANot7roGMofWssRhYes3UmnqtGP/view',
+  },
+  systemManual: {
+    name: 'System Manual',
+    type: 'PDF',
+    url: 'https://drive.google.com/file/d/1CpSUiHXkmewOysNm5YDtciTpSC6ocsnX/view',
+  },
+  fexCheat: {
+    name: 'FEX Product Cheat Sheet',
+    type: 'Unknown',
+    url: 'https://drive.google.com/file/d/15bemD1NzZfqe5rKgVQddd4c_UBQzqq7v/view',
+  },
+  emdManual: {
+    name: 'EMD Manual',
+    type: 'PDF',
+    url: 'https://drive.google.com/file/d/1fnNiu2un8iJmE2A_jSerSrK1FwKPqTxl/view',
+  },
+  fieldSalesManual: {
+    name: 'Field Training Sales Manual',
+    type: 'PDF',
+    url: 'https://drive.google.com/file/d/10VzJ3kXrsHK9CVV_QJsQnOe04YiHjGY2/view',
+  },
+  objectionHandling: {
+    name: 'Objection Handling',
+    type: 'PDF',
+    url: 'https://drive.google.com/file/d/1SJQ2fyd11oOXiXBkSvcjPo6ZNC77y8A0/view',
+  },
+  leadsManual: {
+    name: 'Leads Manual',
+    type: 'PDF',
+    url: 'https://drive.google.com/file/d/1VoxtPgViZqqb6vyXW8JNgCmkyJWmDNry/view',
+  },
+  annualFund: {
+    name: 'Annual Fund Calculator',
+    type: 'Spreadsheet',
+    url: 'https://drive.google.com/file/d/1V8q4OMHucJv63QpvuY60W0MsV9U6zfS3e0WNvVf2aB8/view',
+  },
+  leadsSetup: {
+    name: 'Leads Setup',
+    type: 'Unknown',
+    url: 'https://drive.google.com/file/d/1dF-gM9YjURvWA9dp12v54_qwAzwIchu3EOx9jsPyBYI/view',
+  },
+  leadsTexts: {
+    name: 'Leads Texts',
+    type: 'Word',
+    url: 'https://drive.google.com/file/d/1zlHTp8kJTyAP7jXmaaoS5k8mDpkmsYAe/view',
+  },
+  bmpPresentation: {
+    name: 'BMP Client Presentation',
+    type: 'Unknown',
+    url: 'https://drive.google.com/file/d/1RN5P4raB6EylsXalRzmmOKA5TKPC7qATvWJcKxj4D4I/view',
+  },
+  updatedFieldTraining: {
+    name: 'Updated Field Training Presentation',
+    type: 'PowerPoint',
+    url: 'https://drive.google.com/file/d/1LTMO119J2iBrRSKNSjt7ktpwbpGWL48n/view',
+  },
+  fieldTrainingPresentation: {
+    name: 'Field Training Presentation',
+    type: 'PowerPoint',
+    url: 'https://drive.google.com/file/d/1dmn5EdzjPVJZbxQ7TXeWpIfuZryJUOy2/view',
+  },
+  financialQuestionnaire: {
+    name: 'Financial Questionnaire',
+    type: 'Spreadsheet',
+    url: 'https://drive.google.com/file/d/1bKzuNX8vrGqmb9ydKAaQmNLXy3o9wGKQ/view',
+  },
+  bucketsDime: {
+    name: '4 Buckets + Dime',
+    type: 'Unknown',
+    url: 'https://drive.google.com/file/d/1hsg1VAeCTJpI74Q5bUfi8DLaNj02VAiS/view',
+  },
+  recruitingBuilding: {
+    name: 'Recruiting Building Manual',
+    type: 'PDF',
+    url: 'https://drive.google.com/file/d/1ZW_2JuPUJipDBp1muROZCQIytcw75Cx6/view',
+  },
+  recruitingInterview: {
+    name: 'Recruiting Interview',
+    type: 'PowerPoint',
+    url: 'https://drive.google.com/file/d/1PKjEDmOkX-eUGKcA_PukYjf59JIHKI14/view',
+  },
+  industry: {
+    name: 'The Industry',
+    type: 'Unknown',
+    url: 'https://drive.google.com/file/d/1og6OeaHi_kTNs9RPaVB5ExUepCenMToYRe_h3hTyOtQ/view',
+  },
+  accountabilityTracker: {
+    name: 'CFT Accountability Tracker',
+    type: 'Spreadsheet',
+    url: 'https://drive.google.com/file/d/1GLJICpqbhvmz_2Th8mnwnL-O17pl5YSan8mq13kKLL8/view',
+  },
+  systemProgressions: {
+    name: 'System Progressions GFI',
+    type: 'Spreadsheet',
+    url: 'https://drive.google.com/file/d/14UAtS3CNSBay3-Rj0Wpew-tY1R5qfNtV/view',
+  },
+  policyPipeline: {
+    name: 'EMD Policy Pipeline Master Copy',
+    type: 'Spreadsheet',
+    url: 'https://drive.google.com/file/d/1ergWDxILkr8fN8R15N0m85bBTGI2mz1I/view',
+  },
+  policyPipelineClient: {
+    name: 'EMD Policy Pipeline Master Copy Client',
+    type: 'Spreadsheet',
+    url: 'https://drive.google.com/file/d/115mg4074YR3pA7CDRswTecFghrkjSv6X/view',
+  },
+  moversShakers: {
+    name: 'Movers and Shakers',
+    type: 'Word',
+    url: 'https://drive.google.com/file/d/1nBJBA1n-UvIaRu2Un_YjHy-LZ6YvgHgYTiAQVK2lEA8/view',
+  },
+  friendshipFarm: {
+    name: 'Friendship Farm',
+    type: 'Word',
+    url: 'https://drive.google.com/file/d/1Koz4p1q2ayNK4ruv0WpapDRiVb_BRtB3joQEDx_r0Xo/view',
+  },
+  businessCard: {
+    name: 'Business Card',
+    type: 'Word',
+    url: 'https://drive.google.com/file/d/1QGCOKnX7HSzg1h1ALNtdX1Lxa1n-IsnsyTSlcBj1fEo/view',
+  },
+  businessPerson: {
+    name: 'Business Person Script',
+    type: 'Word',
+    url: 'https://drive.google.com/file/d/1kIHfmQ4LZlAELLR_NZeysbb9oHmqf4RQoqaBQBS1KoY/view',
+  },
+  instagram: {
+    name: 'Instagram',
+    type: 'Word',
+    url: 'https://drive.google.com/file/d/1S4NT9vi2gx02h_TKzuIvqQQbaeF_M7ErSNBZnheTbCk/view',
+  },
+  linkedin: {
+    name: 'LinkedIn',
+    type: 'Word',
+    url: 'https://drive.google.com/file/d/1B_Yj0kmQ_WVc40BLTe1PuGzr13uwRJZIi3aszPPGvVE/view',
+  },
+  runningPromotion: {
+    name: 'Running for Promotion',
+    type: 'Word',
+    url: 'https://drive.google.com/file/d/17usb5MMspXJ32zUQoySNdlLgO8NDoTHQbEUGNR9FTeM/view',
+  },
+  facebookGroup: {
+    name: 'Facebook Group',
+    type: 'Word',
+    url: 'https://drive.google.com/file/d/1gXXzzl65VvntuyAYgyq7H-SW1BHUWQGog-3YYejhS7Y/view',
+  },
+  expandingBusiness: {
+    name: 'Expanding My Business',
+    type: 'Word',
+    url: 'https://drive.google.com/file/d/1eD6QsDErCc62ylFZgkZ-wchVii2_rhmVJx83vcsDaxY/view',
+  },
+  coldMarket: {
+    name: 'Cold Market',
+    type: 'Word',
+    url: 'https://drive.google.com/file/d/17jXXZZKMJFIzbwR4ET2u0rQrnDQ8LCoLbiO5NbaV6CY/view',
+  },
+  closeFriend: {
+    name: 'Close Friend',
+    type: 'Word',
+    url: 'https://drive.google.com/file/d/1_mzKMu-lAqdZ5MELNAk6z_FgnncLOoeSUPKR11Kt85g/view',
+  },
+  lukeWarm: {
+    name: 'Luke Warm Market',
+    type: 'Word',
+    url: 'https://drive.google.com/file/d/1hGqGzqPWyXpm6jNxo56wvpn--7E-P3H8TF2_3Fx0y9w/view',
+  },
+  tevahLicensing: {
+    name: 'TEVAH Licensing',
+    type: 'Shortcut',
+    url: 'https://drive.google.com/file/d/1AF3Ld-6lld67FMM21OFkW_0jxHCNRaDi/view',
+  },
+  books: {
+    name: 'Books',
+    type: 'Shortcut',
+    url: 'https://drive.google.com/file/d/1COz999NIixCQik2FQV32po_7eHZm04HW/view',
+  },
+}
+
+const trainingSections = [
+  {
+    title: 'New Agent Onboarding',
+    items: [
+      driveResources.onboardingSchool,
+      driveResources.orientationPart1,
+      driveResources.orientationPart2,
+      driveResources.orientationInProgress,
+      driveResources.onboarding1,
+      driveResources.onboarding2,
+      driveResources.onboarding3,
+      driveResources.week1,
+      driveResources.week2,
+      driveResources.week3,
+      driveResources.systemManual,
+    ],
+  },
+  {
+    title: 'Product Training',
+    items: [
+      driveResources.fexCheat,
+      driveResources.emdManual,
+      driveResources.fieldSalesManual,
+      driveResources.objectionHandling,
+      driveResources.leadsManual,
+      driveResources.annualFund,
+    ],
+  },
+  {
+    title: 'Appointment Setting',
+    items: [driveResources.leadsSetup, driveResources.leadsTexts, driveResources.leadsManual],
+  },
+  {
+    title: 'Field Training',
+    items: [
+      driveResources.bmpPresentation,
+      driveResources.updatedFieldTraining,
+      driveResources.fieldTrainingPresentation,
+      driveResources.financialQuestionnaire,
+      driveResources.bucketsDime,
+      driveResources.annualFund,
+    ],
+  },
+  {
+    title: 'Leadership Development',
+    items: [
+      driveResources.recruitingBuilding,
+      driveResources.recruitingInterview,
+      driveResources.industry,
+    ],
+  },
+  {
+    title: 'Weekly Team Training',
+    items: [
+      driveResources.accountabilityTracker,
+      driveResources.systemProgressions,
+      driveResources.policyPipeline,
+      driveResources.policyPipelineClient,
+    ],
+  },
 ]
 
-const trainingCards = [
-  ['New Agent Onboarding', 'Start here for core systems, expectations, and first-week priorities.'],
-  ['Product Training', 'Build product fluency with structured carrier and solution modules.'],
-  ['Appointment Setting', 'Improve outreach, follow-up, and calendar-setting skills.'],
-  ['Field Training', 'Practice client meetings, discovery, and presentation flow.'],
-  ['Leadership Development', 'Develop recruiting, coaching, and team-building habits.'],
-  ['Weekly Team Training', 'Access weekly calls, notes, and team development sessions.'],
+const resourceSections = [
+  {
+    title: 'Recruiting Scripts',
+    items: [
+      driveResources.moversShakers,
+      driveResources.friendshipFarm,
+      driveResources.businessCard,
+      driveResources.businessPerson,
+      driveResources.instagram,
+      driveResources.linkedin,
+      driveResources.runningPromotion,
+      driveResources.facebookGroup,
+      driveResources.expandingBusiness,
+      driveResources.coldMarket,
+      driveResources.closeFriend,
+      driveResources.lukeWarm,
+    ],
+  },
+  {
+    title: 'Client Guides / Tools',
+    items: [
+      driveResources.fexCheat,
+      driveResources.bmpPresentation,
+      driveResources.financialQuestionnaire,
+      driveResources.annualFund,
+      driveResources.bucketsDime,
+    ],
+  },
+  {
+    title: 'Other',
+    items: [driveResources.tevahLicensing, driveResources.books],
+  },
 ]
 
 function navigateTo(path) {
@@ -213,18 +519,55 @@ function FooterColumn({ title, links }) {
   )
 }
 
-function CardGrid({ items, actionLabel = 'Open Resource' }) {
+function ResourceCard({ resource, section }) {
   return (
-    <div className="card-grid">
-      {items.map(([title, text], index) => (
-        <article className="portal-card" key={title}>
-          <div className="card-icon">{String(index + 1).padStart(2, '0')}</div>
-          <h3>{title}</h3>
-          <p>{text}</p>
-          <button className={index < 2 ? 'btn small primary' : 'btn small ghost'} type="button">
-            {index < 2 ? actionLabel : 'Coming Soon'}
-          </button>
-        </article>
+    <article className="resource-card">
+      <div className="resource-card-top">
+        <span className="type-badge">{resource.type || 'Unknown'}</span>
+        <span className="section-badge">{section}</span>
+      </div>
+      <h3>{resource.name}</h3>
+      <a className="btn small primary" href={resource.url} rel="noreferrer" target="_blank">
+        Open Resource
+      </a>
+    </article>
+  )
+}
+
+function ResourceSection({ title, items, children }) {
+  return (
+    <section className="resource-section">
+      <div className="resource-section-heading">
+        <h2>{title}</h2>
+        <span>{items.length} resources</span>
+      </div>
+      {children}
+      <div className="resource-grid">
+        {items.map((resource) => (
+          <ResourceCard key={`${title}-${resource.name}`} resource={resource} section={title} />
+        ))}
+      </div>
+    </section>
+  )
+}
+
+function ResourceHub({ sections, onboardingAction = false }) {
+  return (
+    <div className="resource-hub">
+      {sections.map((section, index) => (
+        <ResourceSection items={section.items} key={section.title} title={section.title}>
+          {onboardingAction && index === 0 ? (
+            <div className="resource-callout">
+              <div>
+                <h3>Ready to start onboarding?</h3>
+                <p>Join the team first, then work through the onboarding resources below.</p>
+              </div>
+              <ExternalButton href={TEAM_SIGNUP_URL} variant="primary">
+                Join My Team
+              </ExternalButton>
+            </div>
+          ) : null}
+        </ResourceSection>
       ))}
     </div>
   )
@@ -586,9 +929,9 @@ function ResourcesPage() {
     <PageShell
       eyebrow="Team Resources"
       title="Leadership Resource Library"
-      text="A polished home for scripts, guides, templates, documents, announcements, and important links."
+      text="Google Drive resources for recruiting scripts, client tools, licensing, and team reference materials."
     >
-      <CardGrid items={resourceCards} />
+      <ResourceHub sections={resourceSections} />
     </PageShell>
   )
 }
@@ -598,26 +941,9 @@ function TrainingPage() {
     <PageShell
       eyebrow="Training Center"
       title="Build Skill. Build Leaders."
-      text="Access development paths for agents, field work, appointment setting, products, and leadership growth."
+      text="Structured Google Drive training resources for onboarding, products, appointment setting, field training, leadership, and weekly systems."
     >
-      <div className="card-grid">
-        {trainingCards.map(([title, text], index) => (
-          <article className="portal-card" key={title}>
-            <div className="card-icon">{String(index + 1).padStart(2, '0')}</div>
-            <h3>{title}</h3>
-            <p>{text}</p>
-            {index === 0 ? (
-              <ExternalButton href={TEAM_SIGNUP_URL} variant="small primary">
-                Join My Team
-              </ExternalButton>
-            ) : (
-              <button className="btn small ghost" type="button">
-                Coming Soon
-              </button>
-            )}
-          </article>
-        ))}
-      </div>
+      <ResourceHub onboardingAction sections={trainingSections} />
     </PageShell>
   )
 }
