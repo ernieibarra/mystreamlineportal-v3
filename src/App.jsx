@@ -5,6 +5,8 @@ import './App.css'
 
 const TEAM_EMAIL = 'team@newgenreservices.com'
 const CRM_URL = 'https://crm.mystreamlineportal.com'
+const TEAM_SIGNUP_URL = 'https://tevahtech.com/signup/A2152'
+const CALENDLY_URL = 'https://calendly.com/life-ernieibarra/30min'
 
 const navLinks = [
   { label: 'Home', path: '/' },
@@ -86,6 +88,14 @@ function LinkButton({ path, children, variant = 'primary', className = '' }) {
     >
       {children}
     </button>
+  )
+}
+
+function ExternalButton({ href, children, variant = 'primary', className = '' }) {
+  return (
+    <a className={`btn ${variant} ${className}`} href={href} rel="noreferrer" target="_blank">
+      {children}
+    </a>
   )
 }
 
@@ -236,8 +246,11 @@ function HomePage() {
           </p>
           <div className="hero-actions">
             <LinkButton path="/intakeform">Submit Intake</LinkButton>
-            <LinkButton path="/resources" variant="secondary">
-              View Resources
+            <ExternalButton href={TEAM_SIGNUP_URL} variant="secondary">
+              Join My Team
+            </ExternalButton>
+            <LinkButton path="/appointments" variant="secondary">
+              Book an Appointment
             </LinkButton>
           </div>
           <div className="trust-badges">
@@ -587,7 +600,24 @@ function TrainingPage() {
       title="Build Skill. Build Leaders."
       text="Access development paths for agents, field work, appointment setting, products, and leadership growth."
     >
-      <CardGrid items={trainingCards} actionLabel="Start Training" />
+      <div className="card-grid">
+        {trainingCards.map(([title, text], index) => (
+          <article className="portal-card" key={title}>
+            <div className="card-icon">{String(index + 1).padStart(2, '0')}</div>
+            <h3>{title}</h3>
+            <p>{text}</p>
+            {index === 0 ? (
+              <ExternalButton href={TEAM_SIGNUP_URL} variant="small primary">
+                Join My Team
+              </ExternalButton>
+            ) : (
+              <button className="btn small ghost" type="button">
+                Coming Soon
+              </button>
+            )}
+          </article>
+        ))}
+      </div>
     </PageShell>
   )
 }
@@ -597,40 +627,24 @@ function AppointmentsPage() {
     <PageShell
       eyebrow="Appointments"
       title="Book an Appointment"
-      text="Schedule strategy calls, client appointments, or team meetings."
+      text="Choose an available time below and Calendly will handle confirmation, reminders, and calendar availability."
     >
-      <div className="booking-layout">
-        <aside className="booking-card">
-          <h3>Booking Desk</h3>
-          <p>
-            Requests are routed to {TEAM_EMAIL}. Final calendar automation should run
-            through a secure backend or approved scheduling provider.
-          </p>
-          <span>Strategy Calls</span>
-          <span>Client Appointments</span>
-          <span>Team Meetings</span>
-        </aside>
-        <ManagedForm
-          formName="newgen-appointment-form"
-          formType="appointment request"
-          submitLabel="Request Appointment"
-        >
-          <FormSection title="Appointment Details">
-            <TextInput label="Name" name="name" required />
-            <TextInput label="Email" name="email" type="email" required />
-            <TextInput label="Phone" name="phone" type="tel" />
-            <SelectInput
-              label="Appointment type"
-              name="appointmentType"
-              options={['Strategy Call', 'Client Appointment', 'Team Meeting']}
-              required
-            />
-            <TextInput label="Preferred date" name="preferredDate" type="date" required />
-            <TextInput label="Preferred time" name="preferredTime" type="time" required />
-            <TextArea label="Notes" name="notes" />
-          </FormSection>
-        </ManagedForm>
-      </div>
+      <section className="calendly-panel">
+        <div className="calendly-header">
+          <div>
+            <h3>Choose Your Time</h3>
+            <p>Calendly will show live availability and send booking confirmations.</p>
+          </div>
+          <ExternalButton href={CALENDLY_URL} variant="primary">
+            Open Calendly
+          </ExternalButton>
+        </div>
+        <iframe
+          className="calendly-frame"
+          src={CALENDLY_URL}
+          title="Book an appointment with NewGen Leadership"
+        />
+      </section>
     </PageShell>
   )
 }

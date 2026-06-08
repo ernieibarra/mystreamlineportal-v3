@@ -671,6 +671,47 @@ textarea:focus {
   padding: 10px 14px;
 }
 
+.calendly-panel {
+  background: #fff;
+  border: 1px solid rgba(6, 23, 52, 0.08);
+  border-radius: 18px;
+  box-shadow: var(--strong-shadow);
+  margin: 0 auto;
+  max-width: 1120px;
+  overflow: hidden;
+}
+
+.calendly-header {
+  align-items: center;
+  background:
+    linear-gradient(135deg, rgba(4, 19, 43, 0.98), rgba(5, 29, 62, 0.96)),
+    radial-gradient(circle at 8% 0%, rgba(214, 162, 42, 0.22), transparent 28%);
+  color: #fff;
+  display: flex;
+  gap: 20px;
+  justify-content: space-between;
+  padding: clamp(22px, 4vw, 34px);
+}
+
+.calendly-header h3 {
+  color: #fff;
+  font-size: clamp(1.4rem, 3vw, 2rem);
+  margin: 0 0 8px;
+}
+
+.calendly-header p {
+  color: rgba(255, 255, 255, 0.76);
+  line-height: 1.6;
+  margin: 0;
+}
+
+.calendly-frame {
+  border: 0;
+  display: block;
+  min-height: 760px;
+  width: 100%;
+}
+
 .crm-panel {
   align-items: center;
   display: grid;
@@ -855,6 +896,19 @@ textarea:focus {
   .team-banner {
     margin-left: 18px;
     margin-right: 18px;
+  }
+
+  .calendly-header {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .calendly-header .btn {
+    width: 100%;
+  }
+
+  .calendly-frame {
+    min-height: 680px;
   }
 
   .quick-grid,
