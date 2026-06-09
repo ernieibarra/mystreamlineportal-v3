@@ -68,31 +68,31 @@ const officeRooms = [
     name: 'Yesenia Ibarra',
     description: 'Direct room for Yesenia Ibarra.',
     meetingId: '875 3289 2436',
-    url: 'https://us06web.zoom.us/j/87532892436?pwd=L6b54Mq8uV14ubFAUnS53obZDTd7n5.1',
+    url: 'https://us06web.zoom.us/j/87532892436?pwd=RaR9o5Axu0aDx9N3krc4lals1hiZmM.1',
   },
   {
     name: 'Ernie Ibarra',
     description: 'Direct room for Ernie Ibarra.',
     meetingId: '879 0134 2910',
-    url: 'https://us06web.zoom.us/j/87901342910?pwd=oMa9XRz7qytpRq0dlGJZejqTMEQ3vI.1',
+    url: 'https://us06web.zoom.us/j/87901342910?pwd=r6ARquNqPFbsAbdBWfcv3qWk1tWzJ4.1',
   },
   {
     name: 'Conference Room 1',
     description: 'Team meeting room for calls and collaboration.',
     meetingId: '831 6988 9359',
-    url: 'https://us06web.zoom.us/j/83169889359?pwd=2daves8ieyaMaEnOx1QT3UhSaPho04.1',
+    url: 'https://us06web.zoom.us/j/83169889359?pwd=zo15GFIMEveJOlfwT1AxY2V6MJOXfY.1',
   },
   {
     name: 'Conference Room 2',
     description: 'Second team meeting room for parallel sessions.',
     meetingId: '859 5640 7860',
-    url: 'https://us06web.zoom.us/j/85956407860?pwd=qBMCZh55IqNTBDKH4Ij79slTRd6pXs.1',
+    url: 'https://us06web.zoom.us/j/85956407860?pwd=NfNyu031f1DYMy5Z7GaExfgwY9CVO9.1',
   },
   {
     name: 'Training',
     description: 'Training room for onboarding, practice, and development.',
     meetingId: '898 5994 4597',
-    url: 'https://us06web.zoom.us/j/89859944597?pwd=bXsDCWrp4eGbiWmWMEkyJmzN6ixIXa.1',
+    url: 'https://us06web.zoom.us/j/89859944597?pwd=tbJtQOPF69g7R6PGF5OkBr62WX1NWZ.1',
   },
 ]
 
