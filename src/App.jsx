@@ -13,6 +13,7 @@ const navLinks = [
   { label: 'Intake Form', path: '/intakeform' },
   { label: 'Team Resources', path: '/resources' },
   { label: 'Training Center', path: '/training' },
+  { label: 'Virtual Office', path: '/office' },
   { label: 'Appointments', path: '/appointments' },
   { label: 'CRM Login', path: '/crm' },
 ]
@@ -40,6 +41,13 @@ const quickAccess = [
     icon: 'training',
   },
   {
+    title: 'Virtual Office',
+    text: 'Join live team rooms for training, conferences, and collaboration.',
+    button: 'Open Office',
+    path: '/office',
+    icon: 'office',
+  },
+  {
     title: 'Book Appointment',
     text: 'Schedule strategy calls, appointments, or team meetings.',
     button: 'Book Now',
@@ -52,6 +60,39 @@ const quickAccess = [
     button: 'Open CRM',
     path: '/crm',
     icon: 'lock',
+  },
+]
+
+const officeRooms = [
+  {
+    name: 'Yesenia Ibarra',
+    description: 'Direct room for Yesenia Ibarra.',
+    meetingId: '875 3289 2436',
+    url: 'https://us06web.zoom.us/j/87532892436?pwd=L6b54Mq8uV14ubFAUnS53obZDTd7n5.1',
+  },
+  {
+    name: 'Ernie Ibarra',
+    description: 'Direct room for Ernie Ibarra.',
+    meetingId: '879 0134 2910',
+    url: 'https://us06web.zoom.us/j/87901342910?pwd=oMa9XRz7qytpRq0dlGJZejqTMEQ3vI.1',
+  },
+  {
+    name: 'Conference Room 1',
+    description: 'Team meeting room for calls and collaboration.',
+    meetingId: '831 6988 9359',
+    url: 'https://us06web.zoom.us/j/83169889359?pwd=2daves8ieyaMaEnOx1QT3UhSaPho04.1',
+  },
+  {
+    name: 'Conference Room 2',
+    description: 'Second team meeting room for parallel sessions.',
+    meetingId: '859 5640 7860',
+    url: 'https://us06web.zoom.us/j/85956407860?pwd=qBMCZh55IqNTBDKH4Ij79slTRd6pXs.1',
+  },
+  {
+    name: 'Training',
+    description: 'Training room for onboarding, practice, and development.',
+    meetingId: '898 5994 4597',
+    url: 'https://us06web.zoom.us/j/89859944597?pwd=bXsDCWrp4eGbiWmWMEkyJmzN6ixIXa.1',
   },
 ]
 
@@ -436,6 +477,13 @@ function PortalIcon({ type }) {
           <path d="M11 19h3M18 19h3M11 23h3M18 23h3" />
         </svg>
       )}
+      {type === 'office' && (
+        <svg viewBox="0 0 32 32">
+          <path d="M5 27V8l11-4 11 4v19" />
+          <path d="M10 13h4M18 13h4M10 18h4M18 18h4" />
+          <path d="M13 27v-5h6v5" />
+        </svg>
+      )}
       {type === 'lock' && (
         <svg viewBox="0 0 32 32">
           <path d="M8 14h16v13H8z" />
@@ -498,7 +546,7 @@ function Footer() {
         <p>NewGen Leadership Team Portal</p>
       </div>
       <FooterColumn title="Quick Links" links={['Home', 'Intake Form', 'Team Resources']} />
-      <FooterColumn title="Tools & Systems" links={['Training Center', 'Appointments', 'CRM Login']} />
+      <FooterColumn title="Tools & Systems" links={['Training Center', 'Virtual Office', 'Appointments', 'CRM Login']} />
       <FooterColumn title="Company" links={['Leadership', 'Team Portal', 'mystreamlineportal.com']} />
       <div className="footer-column">
         <h3>Contact</h3>
@@ -948,6 +996,32 @@ function TrainingPage() {
   )
 }
 
+function VirtualOfficePage() {
+  return (
+    <PageShell
+      eyebrow="Virtual Office"
+      title="Join a Team Room"
+      text="Use these Zoom rooms as the live office lobby for team meetings, training, and focused conversations."
+    >
+      <section className="office-panel">
+        <div className="office-grid">
+          {officeRooms.map((room) => (
+            <article className="office-card" key={room.name}>
+              <span className="type-badge">Zoom Room</span>
+              <h3>{room.name}</h3>
+              <p>{room.description}</p>
+              <span className="meeting-id">Meeting ID: {room.meetingId}</span>
+              <ExternalButton href={room.url} variant="small primary">
+                Join Room
+              </ExternalButton>
+            </article>
+          ))}
+        </div>
+      </section>
+    </PageShell>
+  )
+}
+
 function AppointmentsPage() {
   return (
     <PageShell
@@ -1044,6 +1118,8 @@ function App() {
         return <ResourcesPage />
       case '/training':
         return <TrainingPage />
+      case '/office':
+        return <VirtualOfficePage />
       case '/appointments':
         return <AppointmentsPage />
       case '/crm':

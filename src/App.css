@@ -382,6 +382,7 @@
 
 .crm-panel,
 .booking-card,
+.office-card,
 .portal-card,
 .form-panel {
   background: #fff;
@@ -419,7 +420,7 @@
 .quick-grid {
   display: grid;
   gap: 18px;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
+  grid-template-columns: repeat(6, minmax(0, 1fr));
 }
 
 .card-grid {
@@ -456,6 +457,7 @@
 }
 
 .portal-card h3,
+.office-card h3,
 .booking-card h3,
 .crm-panel h3 {
   color: var(--navy);
@@ -465,6 +467,7 @@
 }
 
 .portal-card p,
+.office-card p,
 .booking-card p,
 .crm-panel p {
   color: var(--muted);
@@ -836,6 +839,56 @@ textarea:focus {
   width: 100%;
 }
 
+.office-panel {
+  margin: 0 auto;
+  max-width: 1160px;
+}
+
+.office-grid {
+  display: grid;
+  gap: 18px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.office-card {
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  min-height: 240px;
+  padding: 24px;
+  position: relative;
+}
+
+.office-card::before {
+  background: linear-gradient(90deg, var(--gold), rgba(214, 162, 42, 0));
+  content: "";
+  height: 3px;
+  left: 24px;
+  position: absolute;
+  right: 24px;
+  top: 0;
+}
+
+.office-card h3 {
+  margin-top: 18px;
+}
+
+.office-card .meeting-id {
+  background: #eef3f8;
+  border-radius: 10px;
+  color: var(--navy);
+  display: inline-flex;
+  font-size: 0.82rem;
+  font-weight: 900;
+  margin: 0 0 20px;
+  padding: 9px 10px;
+  width: fit-content;
+}
+
+.office-card .btn {
+  margin-top: auto;
+}
+
 .crm-panel {
   align-items: center;
   display: grid;
@@ -951,10 +1004,11 @@ textarea:focus {
   }
 
   .quick-grid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .card-grid {
+  .card-grid,
+  .office-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
@@ -1051,6 +1105,7 @@ textarea:focus {
 
   .quick-grid,
   .card-grid,
+  .office-grid,
   .resource-grid,
   .form-grid,
   .crm-panel,
