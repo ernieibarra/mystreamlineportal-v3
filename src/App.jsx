@@ -7,6 +7,7 @@ const TEAM_EMAIL = 'team@newgenreservices.com'
 const CRM_URL = 'https://crm.mystreamlineportal.com'
 const TEAM_SIGNUP_URL = 'https://tevahtech.com/signup/A2152'
 const CALENDLY_URL = 'https://calendly.com/life-ernieibarra/30min'
+const beneficiarySlots = Array.from({ length: 6 }, (_, index) => index + 1)
 
 const navLinks = [
   { label: 'Home', path: '/' },
@@ -691,11 +692,18 @@ function HomePage() {
   )
 }
 
-function TextInput({ label, name, type = 'text', required = false }) {
+function TextInput({ label, name, type = 'text', required = false, autoComplete, inputMode, pattern }) {
   return (
     <label>
       <span>{label}</span>
-      <input name={name} type={type} required={required} />
+      <input
+        autoComplete={autoComplete}
+        inputMode={inputMode}
+        name={name}
+        pattern={pattern}
+        required={required}
+        type={type}
+      />
     </label>
   )
 }
@@ -825,6 +833,14 @@ function IntakeFormPage() {
             options={['Married', 'Single', 'Divorced']}
           />
           <TextInput label="Date of Birth" name="dateOfBirth" type="date" required />
+          <TextInput
+            autoComplete="off"
+            inputMode="numeric"
+            label="Social Security Number"
+            name="socialSecurityNumber"
+            pattern="[0-9-]*"
+            type="password"
+          />
           <TextInput label="Birthplace" name="birthplace" />
           <TextInput label="Spoken Language" name="spokenLanguage" />
           <TextInput label="Home Phone" name="homePhone" type="tel" />
@@ -923,28 +939,24 @@ function IntakeFormPage() {
         </FormSection>
 
         <FormSection title="Beneficiaries">
-          <TextInput label="Name" name="beneficiary1Name" />
-          <TextInput label="Relation" name="beneficiary1Relation" />
-          <TextInput label="Date of Birth" name="beneficiary1Dob" type="date" />
-          <TextInput label="Share %" name="beneficiary1Share" />
-          <SelectInput
-            label="Type"
-            name="beneficiary1Type"
-            options={['Primary', 'Contingent']}
-          />
-          <TextInput label="Phone" name="beneficiary1Phone" type="tel" />
-          <TextInput label="Email" name="beneficiary1Email" type="email" />
-          <TextInput label="Additional Beneficiary Name" name="beneficiary2Name" />
-          <TextInput label="Relation" name="beneficiary2Relation" />
-          <TextInput label="Date of Birth" name="beneficiary2Dob" type="date" />
-          <TextInput label="Share %" name="beneficiary2Share" />
-          <SelectInput
-            label="Type"
-            name="beneficiary2Type"
-            options={['Primary', 'Contingent']}
-          />
-          <TextInput label="Phone" name="beneficiary2Phone" type="tel" />
-          <TextInput label="Email" name="beneficiary2Email" type="email" />
+          {beneficiarySlots.map((slot) => (
+            <div className="beneficiary-card full" key={slot}>
+              <h3>Beneficiary {slot}</h3>
+              <div className="form-grid nested-grid">
+                <TextInput label="Name" name={`beneficiary${slot}Name`} />
+                <TextInput label="Relation" name={`beneficiary${slot}Relation`} />
+                <TextInput label="Date of Birth" name={`beneficiary${slot}Dob`} type="date" />
+                <TextInput label="Share %" name={`beneficiary${slot}Share`} />
+                <SelectInput
+                  label="Type"
+                  name={`beneficiary${slot}Type`}
+                  options={['Primary', 'Contingent']}
+                />
+                <TextInput label="Phone" name={`beneficiary${slot}Phone`} type="tel" />
+                <TextInput label="Email" name={`beneficiary${slot}Email`} type="email" />
+              </div>
+            </div>
+          ))}
         </FormSection>
 
         <FormSection title="Authorization">

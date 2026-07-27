@@ -738,6 +738,23 @@ textarea:focus {
   grid-column: 1 / -1;
 }
 
+.beneficiary-card {
+  background: #f8f9fc;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 18px;
+}
+
+.beneficiary-card h3 {
+  color: var(--navy);
+  font-size: 1rem;
+  margin: 0 0 14px;
+}
+
+.nested-grid {
+  margin-bottom: 0;
+}
+
 .checkbox {
   align-items: start;
   display: flex;
