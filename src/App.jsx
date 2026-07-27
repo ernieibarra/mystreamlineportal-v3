@@ -8,6 +8,7 @@ const CRM_URL = 'https://crm.mystreamlineportal.com'
 const TEAM_SIGNUP_URL = 'https://tevahtech.com/signup/A2152'
 const CALENDLY_URL = 'https://calendly.com/life-ernieibarra/30min'
 const beneficiarySlots = Array.from({ length: 6 }, (_, index) => index + 1)
+const childSlots = Array.from({ length: 6 }, (_, index) => index + 1)
 
 const navLinks = [
   { label: 'Home', path: '/' },
@@ -811,6 +812,10 @@ function ManagedForm({ children, formName, formType, submitLabel }) {
 }
 
 function IntakeFormPage() {
+  const [includeSpouse, setIncludeSpouse] = useState(false)
+  const [childCount, setChildCount] = useState('0')
+  const visibleChildSlots = childSlots.slice(0, Number(childCount))
+
   return (
     <PageShell
       eyebrow="Public Intake"
@@ -883,6 +888,114 @@ function IntakeFormPage() {
           <CheckboxInput label="Deployment Order outside USA" name="deploymentOrder" />
           <TextArea label="If yes, provide Armed Forces details" name="armedForcesDetails" />
         </FormSection>
+
+        <FormSection title="Family Members">
+          <label className="checkbox full option-toggle">
+            <input
+              checked={includeSpouse}
+              name="includeSpouse"
+              onChange={(event) => setIncludeSpouse(event.target.checked)}
+              type="checkbox"
+              value="Yes"
+            />
+            <span>Add spouse intake information</span>
+          </label>
+          <label>
+            <span>Children to include</span>
+            <select
+              name="childIntakeCount"
+              onChange={(event) => setChildCount(event.target.value)}
+              value={childCount}
+            >
+              {['0', '1', '2', '3', '4', '5', '6'].map((count) => (
+                <option key={count} value={count}>{count}</option>
+              ))}
+            </select>
+          </label>
+        </FormSection>
+
+        {includeSpouse && (
+          <FormSection title="Spouse Intake">
+            <TextInput label="First Name" name="spouseFirstName" />
+            <TextInput label="Middle Initial" name="spouseMiddleInitial" />
+            <TextInput label="Last Name" name="spouseLastName" />
+            <TextInput label="Sex" name="spouseSex" />
+            <TextInput label="Date of Birth" name="spouseDateOfBirth" type="date" />
+            <TextInput
+              autoComplete="off"
+              inputMode="numeric"
+              label="Social Security Number"
+              name="spouseSocialSecurityNumber"
+              pattern="[0-9-]*"
+              type="password"
+            />
+            <TextInput label="Birthplace" name="spouseBirthplace" />
+            <TextInput label="Spoken Language" name="spouseSpokenLanguage" />
+            <TextInput label="Cell Phone" name="spouseCellPhone" type="tel" />
+            <TextInput label="Email" name="spouseEmail" type="email" />
+            <TextInput label="Address" name="spouseAddress" />
+            <TextInput label="City" name="spouseCity" />
+            <TextInput label="State" name="spouseState" />
+            <TextInput label="ZIP code" name="spouseZipCode" />
+            <TextInput label="ID Type" name="spouseIdType" />
+            <TextInput label="ID Number" name="spouseIdNumber" />
+            <TextInput label="ID Expiration" name="spouseIdExpiration" type="date" />
+            <TextInput label="State Issued" name="spouseStateIssue" />
+            <SelectInput
+              label="U.S. Citizen"
+              name="spouseUsCitizen"
+              options={['Yes', 'No', 'Permanent Resident']}
+            />
+            <TextInput label="Height (ft)" name="spouseHeightFeet" />
+            <TextInput label="Height (in)" name="spouseHeightInches" />
+            <TextInput label="Weight" name="spouseWeight" />
+            <TextInput label="Employer" name="spouseEmployer" />
+            <TextInput label="Occupation / Duties" name="spouseOccupationDuties" />
+            <TextInput label="Current Annual Income" name="spouseAnnualIncomeCurrent" />
+            <TextInput label="Personal Physician" name="spousePhysicianName" />
+            <TextInput label="Physician Phone" name="spousePhysicianPhone" type="tel" />
+            <TextInput label="Date of Last Visit" name="spouseLastVisitDate" type="date" />
+            <TextArea label="Medical notes / medications" name="spouseMedicalNotes" />
+          </FormSection>
+        )}
+
+        {visibleChildSlots.length > 0 && (
+          <FormSection title="Children Intake">
+            {visibleChildSlots.map((slot) => (
+              <div className="beneficiary-card full" key={slot}>
+                <h3>Child {slot}</h3>
+                <div className="form-grid nested-grid">
+                  <TextInput label="First Name" name={`child${slot}FirstName`} />
+                  <TextInput label="Middle Initial" name={`child${slot}MiddleInitial`} />
+                  <TextInput label="Last Name" name={`child${slot}LastName`} />
+                  <TextInput label="Sex" name={`child${slot}Sex`} />
+                  <TextInput label="Date of Birth" name={`child${slot}DateOfBirth`} type="date" />
+                  <TextInput
+                    autoComplete="off"
+                    inputMode="numeric"
+                    label="Social Security Number"
+                    name={`child${slot}SocialSecurityNumber`}
+                    pattern="[0-9-]*"
+                    type="password"
+                  />
+                  <TextInput label="Birthplace" name={`child${slot}Birthplace`} />
+                  <SelectInput
+                    label="U.S. Citizen"
+                    name={`child${slot}UsCitizen`}
+                    options={['Yes', 'No', 'Permanent Resident']}
+                  />
+                  <TextInput label="Height (ft)" name={`child${slot}HeightFeet`} />
+                  <TextInput label="Height (in)" name={`child${slot}HeightInches`} />
+                  <TextInput label="Weight" name={`child${slot}Weight`} />
+                  <TextInput label="School / Occupation" name={`child${slot}SchoolOccupation`} />
+                  <TextInput label="Phone" name={`child${slot}Phone`} type="tel" />
+                  <TextInput label="Email" name={`child${slot}Email`} type="email" />
+                  <TextArea label="Medical notes / medications" name={`child${slot}MedicalNotes`} />
+                </div>
+              </div>
+            ))}
+          </FormSection>
+        )}
 
         <FormSection title="Employment">
           <TextInput label="Employer" name="employer" />
