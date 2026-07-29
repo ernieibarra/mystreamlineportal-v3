@@ -803,9 +803,12 @@ function ManagedForm({ children, formName, formType, submitLabel }) {
         </label>
       </p>
       {children}
-      <button className="btn primary form-submit" disabled={status === 'loading'} type="submit">
-        {status === 'loading' ? 'Submitting...' : submitLabel}
-      </button>
+      <div className="submit-panel" id="submit-intake">
+        <p>Finished? Submit the full intake once all applicable sections are complete.</p>
+        <button className="btn primary form-submit" disabled={status === 'loading'} type="submit">
+          {status === 'loading' ? 'Submitting...' : submitLabel}
+        </button>
+      </div>
       {message && <p className={`form-message ${status}`}>{message}</p>}
     </form>
   )
@@ -815,6 +818,18 @@ function IntakeFormPage() {
   const [includeSpouse, setIncludeSpouse] = useState(false)
   const [childCount, setChildCount] = useState('0')
   const visibleChildSlots = childSlots.slice(0, Number(childCount))
+  const intakeSections = [
+    { id: 'proposed-insured', label: 'Proposed Insured' },
+    { id: 'family-members', label: 'Family Members' },
+    ...(includeSpouse ? [{ id: 'spouse-intake', label: 'Spouse Intake' }] : []),
+    ...(visibleChildSlots.length > 0 ? [{ id: 'children-intake', label: 'Children Intake' }] : []),
+    { id: 'employment', label: 'Employment' },
+    { id: 'medical', label: 'Medical' },
+    { id: 'medications', label: 'Medications' },
+    { id: 'beneficiaries', label: 'Beneficiaries' },
+    { id: 'authorization', label: 'Authorization' },
+    { id: 'submit-intake', label: 'Submit' },
+  ]
 
   return (
     <PageShell
@@ -822,12 +837,34 @@ function IntakeFormPage() {
       title="Client Intake Form"
       text="Submit client information through a secure backend email workflow for NewGen Leadership review."
     >
+      <section className="intake-toolbar" id="intake-sections" aria-label="Intake form navigation">
+        <div>
+          <p className="eyebrow">Form navigation</p>
+          <h2>Jump to the section you need.</h2>
+          <p>
+            Complete what applies. Spouse and children sections appear only when you add them.
+          </p>
+        </div>
+        <nav className="intake-jump-nav">
+          {intakeSections.map((section, index) => (
+            <a href={`#${section.id}`} key={section.id}>
+              <span>{String(index + 1).padStart(2, '0')}</span>
+              {section.label}
+            </a>
+          ))}
+        </nav>
+      </section>
+
       <ManagedForm
         formName="newgen-intake-form"
         formType="client intake form"
         submitLabel="Submit Intake"
       >
-        <FormSection title="Proposed Insured">
+        <FormSection
+          description="Start with the primary person applying or being reviewed."
+          id="proposed-insured"
+          title="Proposed Insured"
+        >
           <TextInput label="First Name" name="proposedInsuredFirstName" required />
           <TextInput label="Middle Initial" name="proposedInsuredMiddleInitial" />
           <TextInput label="Last Name" name="proposedInsuredLastName" required />
@@ -889,7 +926,11 @@ function IntakeFormPage() {
           <TextArea label="If yes, provide Armed Forces details" name="armedForcesDetails" />
         </FormSection>
 
-        <FormSection title="Family Members">
+        <FormSection
+          description="Turn on spouse or child intake sections here so everything stays in one submission."
+          id="family-members"
+          title="Family Members"
+        >
           <label className="checkbox full option-toggle">
             <input
               checked={includeSpouse}
@@ -915,7 +956,11 @@ function IntakeFormPage() {
         </FormSection>
 
         {includeSpouse && (
-          <FormSection title="Spouse Intake">
+          <FormSection
+            description="Add spouse details only when this file includes spouse coverage or review."
+            id="spouse-intake"
+            title="Spouse Intake"
+          >
             <TextInput label="First Name" name="spouseFirstName" />
             <TextInput label="Middle Initial" name="spouseMiddleInitial" />
             <TextInput label="Last Name" name="spouseLastName" />
@@ -960,7 +1005,11 @@ function IntakeFormPage() {
         )}
 
         {visibleChildSlots.length > 0 && (
-          <FormSection title="Children Intake">
+          <FormSection
+            description="Add details for each child included in this intake."
+            id="children-intake"
+            title="Children Intake"
+          >
             {visibleChildSlots.map((slot) => (
               <div className="beneficiary-card full" key={slot}>
                 <h3>Child {slot}</h3>
@@ -997,7 +1046,11 @@ function IntakeFormPage() {
           </FormSection>
         )}
 
-        <FormSection title="Employment">
+        <FormSection
+          description="Income and employment details for the proposed insured."
+          id="employment"
+          title="Employment"
+        >
           <TextInput label="Employer" name="employer" />
           <TextInput label="Occupation / Duties" name="occupationDuties" />
           <TextInput label="Work Address" name="workAddress" />
@@ -1009,7 +1062,11 @@ function IntakeFormPage() {
           <SelectInput label="Retirement Plan" name="retirementPlan" options={['Yes', 'No']} />
         </FormSection>
 
-        <FormSection title="Medical">
+        <FormSection
+          description="Health and physician information for the proposed insured."
+          id="medical"
+          title="Medical"
+        >
           <SelectInput
             label="Do you smoke or use drugs?"
             name="smokeOrDrugs"
@@ -1039,7 +1096,11 @@ function IntakeFormPage() {
           />
         </FormSection>
 
-        <FormSection title="Medications">
+        <FormSection
+          description="List current medications and any important notes."
+          id="medications"
+          title="Medications"
+        >
           <TextInput label="Medication Name" name="medication1Name" />
           <TextInput label="Frequency" name="medication1Frequency" />
           <TextInput label="Usage" name="medication1Usage" />
@@ -1051,7 +1112,11 @@ function IntakeFormPage() {
           <TextArea label="Additional medication notes" name="medicationNotes" />
         </FormSection>
 
-        <FormSection title="Beneficiaries">
+        <FormSection
+          description="Add up to six beneficiaries. Leave unused slots blank."
+          id="beneficiaries"
+          title="Beneficiaries"
+        >
           {beneficiarySlots.map((slot) => (
             <div className="beneficiary-card full" key={slot}>
               <h3>Beneficiary {slot}</h3>
@@ -1072,7 +1137,11 @@ function IntakeFormPage() {
           ))}
         </FormSection>
 
-        <FormSection title="Authorization">
+        <FormSection
+          description="Review authorization and sign before submitting."
+          id="authorization"
+          title="Authorization"
+        >
           <label className="checkbox full">
             <input name="authorizationConfirmed" type="checkbox" required />
             <span>
@@ -1088,10 +1157,14 @@ function IntakeFormPage() {
   )
 }
 
-function FormSection({ title, children }) {
+function FormSection({ title, id, description, children }) {
   return (
-    <fieldset>
-      <legend>{title}</legend>
+    <fieldset className="form-section-block" id={id}>
+      <legend>
+        <span>{title}</span>
+        <a href="#intake-sections">Top</a>
+      </legend>
+      {description && <p className="section-help">{description}</p>}
       <div className="form-grid">{children}</div>
     </fieldset>
   )
