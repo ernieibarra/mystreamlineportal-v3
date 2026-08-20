@@ -81,19 +81,21 @@ const perUnitChargeByRateClass = {
 }
 
 const calculatorDefaults = {
-  yearOnePremium: 200000,
   annualPremium: 150000,
-  yearsOfFunding: 10,
-  loanPercent: 75,
-  loanRate: 5,
   creditingRate: 7,
+  deathBenefitOption: 'increasing',
   faceAmount: 2000000,
   issueAge: 45,
+  loanOverrides: {},
+  loanPercent: 75,
+  loanRate: 5,
   policyFeeMonthly: 7.5,
-  rateClass: 'preferredPlus',
+  premiumOverrides: {},
   premiumLoadYearOne: 9,
   premiumLoadRenewal: 5,
-  deathBenefitOption: 'increasing',
+  rateClass: 'preferredPlus',
+  yearOnePremium: 200000,
+  yearsOfFunding: 10,
 }
 
 const navLinks = [
@@ -547,6 +549,10 @@ function toNumber(value) {
   return Number.isFinite(parsed) ? parsed : 0
 }
 
+function hasOverrideValue(value) {
+  return value !== undefined && value !== null && String(value).trim() !== ''
+}
+
 function formatCurrency(value) {
   return new Intl.NumberFormat('en-US', {
     currency: 'USD',
@@ -586,6 +592,8 @@ function calculateIulProjection(inputs) {
     loanPercent: toNumber(inputs.loanPercent) / 100,
     loanRate: toNumber(inputs.loanRate) / 100,
     policyFeeMonthly: toNumber(inputs.policyFeeMonthly),
+    loanOverrides: inputs.loanOverrides || {},
+    premiumOverrides: inputs.premiumOverrides || {},
     premiumLoadRenewal: toNumber(inputs.premiumLoadRenewal) / 100,
     premiumLoadYearOne: toNumber(inputs.premiumLoadYearOne) / 100,
     rateClass: inputs.rateClass,
@@ -599,11 +607,16 @@ function calculateIulProjection(inputs) {
   const rows = projectionYears.map((year) => {
     const age = config.issueAge + year - 1
     const previousCashValue = cashValue
-    const premium =
+    const defaultPremium =
       year === 1
         ? config.yearOnePremium > 0 ? config.yearOnePremium : config.annualPremium
         : year <= config.yearsOfFunding ? config.annualPremium : 0
-    const policyLoanTaken = premium * config.loanPercent
+    const premium = hasOverrideValue(config.premiumOverrides[year])
+      ? toNumber(config.premiumOverrides[year])
+      : defaultPremium
+    const policyLoanTaken = hasOverrideValue(config.loanOverrides[year])
+      ? toNumber(config.loanOverrides[year])
+      : premium * config.loanPercent
 
     policyLoans += policyLoanTaken
 
@@ -646,6 +659,8 @@ function calculateIulProjection(inputs) {
       policyLoanTaken,
       policyLoans,
       premium,
+      premiumOverridden: hasOverrideValue(config.premiumOverrides[year]),
+      loanOverridden: hasOverrideValue(config.loanOverrides[year]),
       totalCost,
       year,
     }
@@ -1505,6 +1520,23 @@ function SummaryMetric({ label, value, featured = false }) {
   )
 }
 
+function ProjectionOverrideInput({ label, onChange, value, year }) {
+  return (
+    <label className="projection-override">
+      <span>{label}</span>
+      <input
+        aria-label={`${label} for year ${year}`}
+        inputMode="decimal"
+        min="0"
+        onChange={(event) => onChange(year, event.target.value)}
+        placeholder="Default"
+        type="number"
+        value={value || ''}
+      />
+    </label>
+  )
+}
+
 function CalculatorPage() {
   const [inputs, setInputs] = useState(calculatorDefaults)
   const projection = useMemo(() => calculateIulProjection(inputs), [inputs])
@@ -1516,6 +1548,30 @@ function CalculatorPage() {
 
   function resetCalculator() {
     setInputs(calculatorDefaults)
+  }
+
+  function updateYearOverride(type, year, value) {
+    const key = type === 'premium' ? 'premiumOverrides' : 'loanOverrides'
+
+    setInputs((current) => {
+      const nextOverrides = { ...current[key] }
+
+      if (value === '') {
+        delete nextOverrides[year]
+      } else {
+        nextOverrides[year] = value
+      }
+
+      return { ...current, [key]: nextOverrides }
+    })
+  }
+
+  function clearYearOverrides() {
+    setInputs((current) => ({
+      ...current,
+      loanOverrides: {},
+      premiumOverrides: {},
+    }))
   }
 
   return (
@@ -1698,10 +1754,18 @@ function CalculatorPage() {
       </section>
 
       <section className="calculator-table-card" aria-label="30-year projection table">
-        <div className="calculator-card-heading">
-          <p className="eyebrow dark">Projection</p>
-          <h2>30-Year Ledger</h2>
-          <p>Scrollable on mobile for clean viewing.</p>
+        <div className="calculator-table-heading">
+          <div className="calculator-card-heading">
+            <p className="eyebrow dark">Projection</p>
+            <h2>30-Year Ledger</h2>
+            <p>
+              Edit the yellow override fields to change funding or policy loan
+              amounts for a specific year. Leave blank to use the global assumptions.
+            </p>
+          </div>
+          <button className="btn navy small" onClick={clearYearOverrides} type="button">
+            Clear Year Overrides
+          </button>
         </div>
         <div className="calculator-table-wrap">
           <table className="calculator-table">
@@ -1709,6 +1773,8 @@ function CalculatorPage() {
               <tr>
                 <th>Year</th>
                 <th>Age</th>
+                <th>Funding Override</th>
+                <th>Loan Override</th>
                 <th>Premium Funded</th>
                 <th>Policy Loan Taken</th>
                 <th>Loan Interest</th>
@@ -1728,6 +1794,22 @@ function CalculatorPage() {
                 <tr key={row.year}>
                   <td>{row.year}</td>
                   <td>{row.age}</td>
+                  <td>
+                    <ProjectionOverrideInput
+                      label="Funding"
+                      onChange={(year, value) => updateYearOverride('premium', year, value)}
+                      value={inputs.premiumOverrides[row.year]}
+                      year={row.year}
+                    />
+                  </td>
+                  <td>
+                    <ProjectionOverrideInput
+                      label="Loan"
+                      onChange={(year, value) => updateYearOverride('loan', year, value)}
+                      value={inputs.loanOverrides[row.year]}
+                      year={row.year}
+                    />
+                  </td>
                   <td>{formatCurrency(row.premium)}</td>
                   <td>{formatCurrency(row.policyLoanTaken)}</td>
                   <td>{formatCurrency(row.loanInterest)}</td>

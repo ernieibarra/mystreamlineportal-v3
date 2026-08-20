@@ -1066,6 +1066,18 @@ textarea:focus {
   padding: clamp(20px, 3vw, 30px);
 }
 
+.calculator-table-heading {
+  align-items: start;
+  display: flex;
+  gap: 18px;
+  justify-content: space-between;
+}
+
+.calculator-table-heading .btn {
+  flex: 0 0 auto;
+  margin-top: 4px;
+}
+
 .calculator-table-wrap {
   border: 1px solid var(--border);
   border-radius: 14px;
@@ -1074,7 +1086,7 @@ textarea:focus {
 
 .calculator-table {
   border-collapse: collapse;
-  min-width: 1320px;
+  min-width: 1580px;
   width: 100%;
 }
 
@@ -1109,6 +1121,31 @@ textarea:focus {
 
 .calculator-table tbody tr:hover {
   background: #fff8e6;
+}
+
+.projection-override {
+  display: grid;
+  gap: 5px;
+  min-width: 122px;
+}
+
+.projection-override span {
+  color: var(--muted);
+  font-size: 0.68rem;
+  font-weight: 900;
+  letter-spacing: 0.06em;
+  text-align: left;
+  text-transform: uppercase;
+}
+
+.projection-override input {
+  background: #fffdf4;
+  border-color: rgba(214, 162, 42, 0.42);
+  border-radius: 9px;
+  font-size: 0.8rem;
+  font-weight: 800;
+  min-height: 36px;
+  padding: 8px 10px;
 }
 
 .calculator-notes {
@@ -1440,6 +1477,15 @@ textarea:focus {
   .calendly-header {
     align-items: stretch;
     flex-direction: column;
+  }
+
+  .calculator-table-heading {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .calculator-table-heading .btn {
+    width: 100%;
   }
 
   .calendly-header .btn {
