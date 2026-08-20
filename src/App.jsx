@@ -86,6 +86,7 @@ const calculatorDefaults = {
   deathBenefitOption: 'increasing',
   faceAmount: 2000000,
   issueAge: 45,
+  loanCreditSpread: 0.5,
   loanOverrides: {},
   loanPercent: 75,
   loanRate: 5,
@@ -568,6 +569,10 @@ function formatDecimal(value, digits = 2) {
   }).format(value)
 }
 
+function formatPercent(value, digits = 2) {
+  return `${formatDecimal(value * 100, digits)}%`
+}
+
 function getCoiRate(age, rateClass) {
   const exactRate = coiTable.find((row) => row.age === age)
 
@@ -591,6 +596,7 @@ function calculateIulProjection(inputs) {
     issueAge: toNumber(inputs.issueAge),
     loanPercent: toNumber(inputs.loanPercent) / 100,
     loanRate: toNumber(inputs.loanRate) / 100,
+    loanCreditSpread: toNumber(inputs.loanCreditSpread) / 100,
     policyFeeMonthly: toNumber(inputs.policyFeeMonthly),
     loanOverrides: inputs.loanOverrides || {},
     premiumOverrides: inputs.premiumOverrides || {},
@@ -621,6 +627,7 @@ function calculateIulProjection(inputs) {
     policyLoans += policyLoanTaken
 
     const loanInterest = policyLoans * config.loanRate
+    const loanCreditOffset = policyLoans * Math.max(0, config.loanRate + config.loanCreditSpread)
     const coiRate = getCoiRate(age, config.rateClass)
     const coi =
       config.deathBenefitOption === 'increasing'
@@ -628,33 +635,43 @@ function calculateIulProjection(inputs) {
         : Math.max(0, (config.faceAmount - previousCashValue) / 1000) * coiRate
     const policyFees = config.policyFeeMonthly * 12
     const perUnitCharge = year <= 15 ? (config.faceAmount / 1000) * perUnitRate : 0
-    const totalCost = loanInterest + coi + policyFees + perUnitCharge
+    const policyCosts = coi + policyFees + perUnitCharge
+    const totalCost = loanInterest + policyCosts
     const premiumLoad = year === 1 ? config.premiumLoadYearOne : config.premiumLoadRenewal
     const basisBeforeGrowth =
       previousCashValue + premium * (1 - premiumLoad) - coi - policyFees - perUnitCharge
     const policyGrowth = basisBeforeGrowth * config.creditingRate
-    const net = policyGrowth - totalCost
+    const net = policyGrowth - policyCosts - loanInterest + loanCreditOffset
 
     cashValue = basisBeforeGrowth * (1 + config.creditingRate)
 
     const netEquity = cashValue - policyLoans
+    const loanToCashValue = cashValue ? policyLoans / cashValue : 0
     const deathBenefit =
       config.deathBenefitOption === 'increasing'
         ? config.faceAmount + cashValue
         : config.faceAmount
     const netDeathBenefit = deathBenefit - policyLoans
+    const loanToDeathBenefit = deathBenefit ? policyLoans / deathBenefit : 0
+    const breakEvenCreditingRate =
+      basisBeforeGrowth > 0 ? (policyCosts + loanInterest - loanCreditOffset) / basisBeforeGrowth : 0
 
     return {
       age,
+      breakEvenCreditingRate,
       cashValue,
       coi,
       deathBenefit,
       loanInterest,
+      loanCreditOffset,
       net,
       netDeathBenefit,
       netEquity,
+      loanToCashValue,
+      loanToDeathBenefit,
       perUnitCharge,
       policyFees,
+      policyCosts,
       policyGrowth,
       policyLoanTaken,
       policyLoans,
@@ -668,8 +685,10 @@ function calculateIulProjection(inputs) {
 
   const totals = rows.reduce(
     (summary, row) => ({
+      loanCreditOffset: summary.loanCreditOffset + row.loanCreditOffset,
       loanInterest: summary.loanInterest + row.loanInterest,
       netGain: summary.netGain + row.net,
+      policyCosts: summary.policyCosts + row.policyCosts,
       policyGrowth: summary.policyGrowth + row.policyGrowth,
       policyLoansTaken: summary.policyLoansTaken + row.policyLoanTaken,
       premiumFunded: summary.premiumFunded + row.premium,
@@ -677,7 +696,9 @@ function calculateIulProjection(inputs) {
     }),
     {
       loanInterest: 0,
+      loanCreditOffset: 0,
       netGain: 0,
+      policyCosts: 0,
       policyGrowth: 0,
       policyLoansTaken: 0,
       premiumFunded: 0,
@@ -1631,6 +1652,15 @@ function CalculatorPage() {
               value={inputs.loanRate}
             />
             <CalculatorField
+              help="Loaned portion credit above loan charge. Use 0.50 for a 50 bps offset."
+              label="Loan-credit spread (%)"
+              min="0"
+              name="loanCreditSpread"
+              onChange={handleInputChange}
+              step="0.01"
+              value={inputs.loanCreditSpread}
+            />
+            <CalculatorField
               help="Illustrated crediting rate, not guaranteed."
               label="Crediting rate (%)"
               min="0"
@@ -1715,31 +1745,45 @@ function CalculatorPage() {
         <div className="calculator-results">
           <div className="calculator-results-hero">
             <p className="eyebrow">Bottom Line</p>
-            <h2>Illustrated 30-Year Outcome</h2>
+            <h2>Arbitrage Review Dashboard</h2>
             <p>
-              Money in, participating policy loan back out, while the policy keeps
-              growing on the full amount.
+              Track cash value growth, policy drag, loan drag, loan-credit offset,
+              and safety ratios instead of relying on a single illustration number.
             </p>
           </div>
           <div className="calculator-metrics">
             <SummaryMetric
               featured
-              label="Net gain over 30 years"
+              label="Net economic spread"
               value={formatCurrency(totals.netGain)}
             />
-            <SummaryMetric label="Total premium funded" value={formatCurrency(totals.premiumFunded)} />
             <SummaryMetric
-              label="Total policy loans taken back"
-              value={formatCurrency(totals.policyLoansTaken)}
-            />
-            <SummaryMetric
-              label="Total policy growth"
+              label="Cash value growth"
               value={formatCurrency(totals.policyGrowth)}
             />
-            <SummaryMetric label="Total cost" value={formatCurrency(totals.totalCost)} />
             <SummaryMetric
-              label="$ earned per $1 charged"
-              value={formatDecimal(totals.earnedPerDollarCharged, 3)}
+              label="Policy drag"
+              value={formatCurrency(totals.policyCosts)}
+            />
+            <SummaryMetric
+              label="Loan drag"
+              value={formatCurrency(totals.loanInterest)}
+            />
+            <SummaryMetric
+              label="Loan-credit offset"
+              value={formatCurrency(totals.loanCreditOffset)}
+            />
+            <SummaryMetric
+              label="Loan / cash value"
+              value={formatPercent(finalYear.loanToCashValue)}
+            />
+            <SummaryMetric
+              label="Loan / death benefit"
+              value={formatPercent(finalYear.loanToDeathBenefit)}
+            />
+            <SummaryMetric
+              label="Break-even crediting rate"
+              value={formatPercent(finalYear.breakEvenCreditingRate)}
             />
             <SummaryMetric label="Cash value at year 30" value={formatCurrency(finalYear.cashValue)} />
             <SummaryMetric label="Policy loans at year 30" value={formatCurrency(finalYear.policyLoans)} />
@@ -1751,6 +1795,29 @@ function CalculatorPage() {
             />
           </div>
         </div>
+      </section>
+
+      <section className="arbitrage-framework" aria-label="Arbitrage review framework">
+        <article>
+          <span>A</span>
+          <h3>Cash Value Growth</h3>
+          <p>Index crediting and policy growth after the current assumptions are applied.</p>
+        </article>
+        <article>
+          <span>B</span>
+          <h3>Policy Drag</h3>
+          <p>COI, administrative fees, monthly fees, and per-unit charges as the policy ages.</p>
+        </article>
+        <article>
+          <span>C</span>
+          <h3>Loan Drag</h3>
+          <p>Loan interest charged against an increasing policy loan balance.</p>
+        </article>
+        <article>
+          <span>D</span>
+          <h3>Safety Constraints</h3>
+          <p>Loan-to-cash-value, net equity, and net death benefit should stay visible.</p>
+        </article>
       </section>
 
       <section className="calculator-table-card" aria-label="30-year projection table">
@@ -1778,7 +1845,9 @@ function CalculatorPage() {
                 <th>Premium Funded</th>
                 <th>Policy Loan Taken</th>
                 <th>Loan Interest</th>
+                <th>Loan Credit Offset</th>
                 <th>COI</th>
+                <th>Policy Costs</th>
                 <th>Total Cost</th>
                 <th>Policy Growth</th>
                 <th>Net</th>
@@ -1787,6 +1856,8 @@ function CalculatorPage() {
                 <th>Net Equity</th>
                 <th>Death Benefit</th>
                 <th>Net Death Benefit</th>
+                <th>Loan / Cash Value</th>
+                <th>Break-even Rate</th>
               </tr>
             </thead>
             <tbody>
@@ -1813,7 +1884,9 @@ function CalculatorPage() {
                   <td>{formatCurrency(row.premium)}</td>
                   <td>{formatCurrency(row.policyLoanTaken)}</td>
                   <td>{formatCurrency(row.loanInterest)}</td>
+                  <td>{formatCurrency(row.loanCreditOffset)}</td>
                   <td>{formatCurrency(row.coi)}</td>
+                  <td>{formatCurrency(row.policyCosts)}</td>
                   <td>{formatCurrency(row.totalCost)}</td>
                   <td>{formatCurrency(row.policyGrowth)}</td>
                   <td>{formatCurrency(row.net)}</td>
@@ -1822,6 +1895,8 @@ function CalculatorPage() {
                   <td>{formatCurrency(row.netEquity)}</td>
                   <td>{formatCurrency(row.deathBenefit)}</td>
                   <td>{formatCurrency(row.netDeathBenefit)}</td>
+                  <td>{formatPercent(row.loanToCashValue)}</td>
+                  <td>{formatPercent(row.breakEvenCreditingRate)}</td>
                 </tr>
               ))}
             </tbody>
@@ -1831,12 +1906,14 @@ function CalculatorPage() {
 
       <section className="calculator-notes">
         <p>
-          Notes: Crediting is illustrated, not guaranteed. Policy loan rates can
-          change. Keep premiums under the 7-pay limit or the policy may become a MEC.
+          Notes: This model is for strategy review and stress testing, not a carrier
+          guarantee. Actual index crediting, caps, participation rates, policy charges,
+          and loan mechanics can differ from any illustration.
         </p>
         <p>
-          COI is an estimate based on the calculator reference table. Replace with
-          carrier illustration details when preparing a final client review.
+          Keep premiums under the 7-pay limit or the policy may become a MEC. Monitor
+          lapse margin, loan-to-cash-value, net equity, and net death benefit before
+          treating any spread as durable.
         </p>
       </section>
     </PageShell>
