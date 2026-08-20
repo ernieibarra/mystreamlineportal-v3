@@ -9,6 +9,92 @@ const TEAM_SIGNUP_URL = 'https://tevahtech.com/signup/A2152'
 const CALENDLY_URL = 'https://calendly.com/life-ernieibarra/30min'
 const beneficiarySlots = Array.from({ length: 6 }, (_, index) => index + 1)
 const childSlots = Array.from({ length: 6 }, (_, index) => index + 1)
+const projectionYears = Array.from({ length: 30 }, (_, index) => index + 1)
+
+const coiTable = [
+  { age: 30, preferredPlus: 0.53, standard: 0.77, preferred: 0.62 },
+  { age: 31, preferredPlus: 0.53, standard: 0.77, preferred: 0.62 },
+  { age: 32, preferredPlus: 0.53, standard: 0.78, preferred: 0.62 },
+  { age: 33, preferredPlus: 0.53, standard: 0.81, preferred: 0.62 },
+  { age: 34, preferredPlus: 0.53, standard: 0.84, preferred: 0.62 },
+  { age: 35, preferredPlus: 0.57, standard: 0.88, preferred: 0.65 },
+  { age: 36, preferredPlus: 0.61, standard: 0.93, preferred: 0.69 },
+  { age: 37, preferredPlus: 0.66, standard: 0.98, preferred: 0.73 },
+  { age: 38, preferredPlus: 0.73, standard: 1.05, preferred: 0.79 },
+  { age: 39, preferredPlus: 0.81, standard: 1.13, preferred: 0.86 },
+  { age: 40, preferredPlus: 0.9, standard: 1.24, preferred: 0.95 },
+  { age: 41, preferredPlus: 0.97, standard: 1.32, preferred: 1.01 },
+  { age: 42, preferredPlus: 1.03, standard: 1.41, preferred: 1.07 },
+  { age: 43, preferredPlus: 1.08, standard: 1.51, preferred: 1.15 },
+  { age: 44, preferredPlus: 1.13, standard: 1.63, preferred: 1.24 },
+  { age: 45, preferredPlus: 1.19, standard: 1.75, preferred: 1.33 },
+  { age: 46, preferredPlus: 1.27, standard: 1.85, preferred: 1.41 },
+  { age: 47, preferredPlus: 1.37, standard: 1.97, preferred: 1.51 },
+  { age: 48, preferredPlus: 1.49, standard: 2.09, preferred: 1.61 },
+  { age: 49, preferredPlus: 1.63, standard: 2.25, preferred: 1.74 },
+  { age: 50, preferredPlus: 1.78, standard: 2.42, preferred: 1.87 },
+  { age: 51, preferredPlus: 1.95, standard: 2.6, preferred: 2.02 },
+  { age: 52, preferredPlus: 2.07, standard: 2.78, preferred: 2.15 },
+  { age: 53, preferredPlus: 2.19, standard: 2.97, preferred: 2.3 },
+  { age: 54, preferredPlus: 2.31, standard: 3.17, preferred: 2.45 },
+  { age: 55, preferredPlus: 2.45, standard: 3.4, preferred: 2.63 },
+  { age: 56, preferredPlus: 2.63, standard: 3.68, preferred: 2.84 },
+  { age: 57, preferredPlus: 2.83, standard: 3.97, preferred: 3.07 },
+  { age: 58, preferredPlus: 3.02, standard: 4.29, preferred: 3.31 },
+  { age: 59, preferredPlus: 3.21, standard: 4.63, preferred: 3.57 },
+  { age: 60, preferredPlus: 3.39, standard: 5, preferred: 3.85 },
+  { age: 61, preferredPlus: 3.57, standard: 5.41, preferred: 4.16 },
+  { age: 62, preferredPlus: 3.79, standard: 5.87, preferred: 4.5 },
+  { age: 63, preferredPlus: 4.09, standard: 6.37, preferred: 4.88 },
+  { age: 64, preferredPlus: 4.43, standard: 6.94, preferred: 5.3 },
+  { age: 65, preferredPlus: 4.84, standard: 7.61, preferred: 5.81 },
+  { age: 66, preferredPlus: 5.32, standard: 8.37, preferred: 6.38 },
+  { age: 67, preferredPlus: 5.85, standard: 9.24, preferred: 7.04 },
+  { age: 68, preferredPlus: 6.48, standard: 10.25, preferred: 7.8 },
+  { age: 69, preferredPlus: 7.19, standard: 11.39, preferred: 8.67 },
+  { age: 70, preferredPlus: 7.98, standard: 12.66, preferred: 9.63 },
+  { age: 71, preferredPlus: 8.9, standard: 14.12, preferred: 10.74 },
+  { age: 72, preferredPlus: 9.92, standard: 15.75, preferred: 11.97 },
+  { age: 73, preferredPlus: 11.07, standard: 17.59, preferred: 13.37 },
+  { age: 74, preferredPlus: 12.35, standard: 19.64, preferred: 14.92 },
+  { age: 75, preferredPlus: 13.77, standard: 21.91, preferred: 16.64 },
+  { age: 76, preferredPlus: 15.34, standard: 24.42, preferred: 18.55 },
+  { age: 77, preferredPlus: 17.12, standard: 27.27, preferred: 20.7 },
+  { age: 78, preferredPlus: 19.08, standard: 30.39, preferred: 23.07 },
+  { age: 79, preferredPlus: 21.27, standard: 33.87, preferred: 25.71 },
+  { age: 80, preferredPlus: 23.66, standard: 37.68, preferred: 28.61 },
+  { age: 81, preferredPlus: 26.39, standard: 42.01, preferred: 31.9 },
+  { age: 82, preferredPlus: 30.04, standard: 47.54, preferred: 36.18 },
+  { age: 83, preferredPlus: 34.12, standard: 53.7, preferred: 40.94 },
+  { age: 84, preferredPlus: 38.74, standard: 60.62, preferred: 46.32 },
+  { age: 85, preferredPlus: 26.84, standard: 37.43, preferred: 30.66 },
+  { age: 86, preferredPlus: 33.15, standard: 45.74, preferred: 37.57 },
+  { age: 87, preferredPlus: 41.24, standard: 55.59, preferred: 45.77 },
+  { age: 88, preferredPlus: 51.36, standard: 67.64, preferred: 55.81 },
+  { age: 89, preferredPlus: 64.61, standard: 82.65, preferred: 68.39 },
+]
+
+const perUnitChargeByRateClass = {
+  preferredPlus: 2.14,
+  standard: 2.45,
+  preferred: 2.33,
+}
+
+const calculatorDefaults = {
+  yearOnePremium: 200000,
+  annualPremium: 150000,
+  yearsOfFunding: 10,
+  loanPercent: 75,
+  loanRate: 5,
+  creditingRate: 7,
+  faceAmount: 2000000,
+  issueAge: 45,
+  policyFeeMonthly: 7.5,
+  rateClass: 'preferredPlus',
+  premiumLoadYearOne: 9,
+  premiumLoadRenewal: 5,
+  deathBenefitOption: 'increasing',
+}
 
 const navLinks = [
   { label: 'Home', path: '/' },
@@ -428,6 +514,14 @@ function navigateTo(path) {
   window.scrollTo({ top: 0, behavior: 'smooth' })
 }
 
+function normalizePath(path) {
+  if (path.length > 1 && path.endsWith('/')) {
+    return path.slice(0, -1)
+  }
+
+  return path
+}
+
 function LinkButton({ path, children, variant = 'primary', className = '' }) {
   return (
     <button
@@ -446,6 +540,146 @@ function ExternalButton({ href, children, variant = 'primary', className = '' })
       {children}
     </a>
   )
+}
+
+function toNumber(value) {
+  const parsed = Number(value)
+  return Number.isFinite(parsed) ? parsed : 0
+}
+
+function formatCurrency(value) {
+  return new Intl.NumberFormat('en-US', {
+    currency: 'USD',
+    maximumFractionDigits: 0,
+    style: 'currency',
+  }).format(value)
+}
+
+function formatDecimal(value, digits = 2) {
+  return new Intl.NumberFormat('en-US', {
+    maximumFractionDigits: digits,
+    minimumFractionDigits: digits,
+  }).format(value)
+}
+
+function getCoiRate(age, rateClass) {
+  const exactRate = coiTable.find((row) => row.age === age)
+
+  if (exactRate) {
+    return exactRate[rateClass]
+  }
+
+  if (age < coiTable[0].age) {
+    return coiTable[0][rateClass]
+  }
+
+  return coiTable[coiTable.length - 1][rateClass]
+}
+
+function calculateIulProjection(inputs) {
+  const config = {
+    annualPremium: toNumber(inputs.annualPremium),
+    creditingRate: toNumber(inputs.creditingRate) / 100,
+    deathBenefitOption: inputs.deathBenefitOption,
+    faceAmount: toNumber(inputs.faceAmount),
+    issueAge: toNumber(inputs.issueAge),
+    loanPercent: toNumber(inputs.loanPercent) / 100,
+    loanRate: toNumber(inputs.loanRate) / 100,
+    policyFeeMonthly: toNumber(inputs.policyFeeMonthly),
+    premiumLoadRenewal: toNumber(inputs.premiumLoadRenewal) / 100,
+    premiumLoadYearOne: toNumber(inputs.premiumLoadYearOne) / 100,
+    rateClass: inputs.rateClass,
+    yearsOfFunding: Math.max(0, Math.floor(toNumber(inputs.yearsOfFunding))),
+    yearOnePremium: toNumber(inputs.yearOnePremium),
+  }
+  const perUnitRate = perUnitChargeByRateClass[config.rateClass] || 0
+  let cashValue = 0
+  let policyLoans = 0
+
+  const rows = projectionYears.map((year) => {
+    const age = config.issueAge + year - 1
+    const previousCashValue = cashValue
+    const premium =
+      year === 1
+        ? config.yearOnePremium > 0 ? config.yearOnePremium : config.annualPremium
+        : year <= config.yearsOfFunding ? config.annualPremium : 0
+    const policyLoanTaken = premium * config.loanPercent
+
+    policyLoans += policyLoanTaken
+
+    const loanInterest = policyLoans * config.loanRate
+    const coiRate = getCoiRate(age, config.rateClass)
+    const coi =
+      config.deathBenefitOption === 'increasing'
+        ? (config.faceAmount / 1000) * coiRate
+        : Math.max(0, (config.faceAmount - previousCashValue) / 1000) * coiRate
+    const policyFees = config.policyFeeMonthly * 12
+    const perUnitCharge = year <= 15 ? (config.faceAmount / 1000) * perUnitRate : 0
+    const totalCost = loanInterest + coi + policyFees + perUnitCharge
+    const premiumLoad = year === 1 ? config.premiumLoadYearOne : config.premiumLoadRenewal
+    const basisBeforeGrowth =
+      previousCashValue + premium * (1 - premiumLoad) - coi - policyFees - perUnitCharge
+    const policyGrowth = basisBeforeGrowth * config.creditingRate
+    const net = policyGrowth - totalCost
+
+    cashValue = basisBeforeGrowth * (1 + config.creditingRate)
+
+    const netEquity = cashValue - policyLoans
+    const deathBenefit =
+      config.deathBenefitOption === 'increasing'
+        ? config.faceAmount + cashValue
+        : config.faceAmount
+    const netDeathBenefit = deathBenefit - policyLoans
+
+    return {
+      age,
+      cashValue,
+      coi,
+      deathBenefit,
+      loanInterest,
+      net,
+      netDeathBenefit,
+      netEquity,
+      perUnitCharge,
+      policyFees,
+      policyGrowth,
+      policyLoanTaken,
+      policyLoans,
+      premium,
+      totalCost,
+      year,
+    }
+  })
+
+  const totals = rows.reduce(
+    (summary, row) => ({
+      loanInterest: summary.loanInterest + row.loanInterest,
+      netGain: summary.netGain + row.net,
+      policyGrowth: summary.policyGrowth + row.policyGrowth,
+      policyLoansTaken: summary.policyLoansTaken + row.policyLoanTaken,
+      premiumFunded: summary.premiumFunded + row.premium,
+      totalCost: summary.totalCost + row.totalCost,
+    }),
+    {
+      loanInterest: 0,
+      netGain: 0,
+      policyGrowth: 0,
+      policyLoansTaken: 0,
+      premiumFunded: 0,
+      totalCost: 0,
+    },
+  )
+  const finalYear = rows[rows.length - 1]
+
+  return {
+    finalYear,
+    perUnitRate,
+    rows,
+    totals: {
+      ...totals,
+      earnedPerDollarCharged: totals.totalCost ? totals.policyGrowth / totals.totalCost : 0,
+    },
+  }
 }
 
 function PortalIcon({ type }) {
@@ -1220,6 +1454,313 @@ function VirtualOfficePage() {
   )
 }
 
+function CalculatorField({
+  help,
+  label,
+  min,
+  name,
+  onChange,
+  step = '1',
+  type = 'number',
+  value,
+}) {
+  return (
+    <label className="calculator-field">
+      <span>{label}</span>
+      <input
+        min={min}
+        name={name}
+        onChange={(event) => onChange(name, event.target.value)}
+        step={step}
+        type={type}
+        value={value}
+      />
+      {help && <small>{help}</small>}
+    </label>
+  )
+}
+
+function CalculatorSelect({ help, label, name, onChange, options, value }) {
+  return (
+    <label className="calculator-field">
+      <span>{label}</span>
+      <select name={name} onChange={(event) => onChange(name, event.target.value)} value={value}>
+        {options.map((option) => (
+          <option key={option.value} value={option.value}>
+            {option.label}
+          </option>
+        ))}
+      </select>
+      {help && <small>{help}</small>}
+    </label>
+  )
+}
+
+function SummaryMetric({ label, value, featured = false }) {
+  return (
+    <article className={featured ? 'calculator-metric featured' : 'calculator-metric'}>
+      <span>{label}</span>
+      <strong>{value}</strong>
+    </article>
+  )
+}
+
+function CalculatorPage() {
+  const [inputs, setInputs] = useState(calculatorDefaults)
+  const projection = useMemo(() => calculateIulProjection(inputs), [inputs])
+  const { finalYear, totals } = projection
+
+  function handleInputChange(name, value) {
+    setInputs((current) => ({ ...current, [name]: value }))
+  }
+
+  function resetCalculator() {
+    setInputs(calculatorDefaults)
+  }
+
+  return (
+    <PageShell
+      eyebrow="Team Calculator"
+      title="IUL Passthrough Calculator"
+      text="A native website calculator based on the team spreadsheet. This page is hidden from portal navigation and updates instantly as assumptions change."
+    >
+      <section className="calculator-layout" aria-label="IUL passthrough calculator">
+        <aside className="calculator-inputs">
+          <div className="calculator-card-heading">
+            <p className="eyebrow dark">Inputs</p>
+            <h2>Illustration Assumptions</h2>
+            <p>Edit the calculator fields below. Results are illustrations only, not guarantees.</p>
+          </div>
+          <div className="calculator-form-grid">
+            <CalculatorField
+              help="Year 1 is usually higher. Use 0 to match the annual premium."
+              label="Year-1 premium"
+              min="0"
+              name="yearOnePremium"
+              onChange={handleInputChange}
+              value={inputs.yearOnePremium}
+            />
+            <CalculatorField
+              help="How much goes in each year after year 1."
+              label="Annual premium funded"
+              min="0"
+              name="annualPremium"
+              onChange={handleInputChange}
+              value={inputs.annualPremium}
+            />
+            <CalculatorField
+              help="How many years the money passes through."
+              label="Years of funding"
+              min="0"
+              name="yearsOfFunding"
+              onChange={handleInputChange}
+              value={inputs.yearsOfFunding}
+            />
+            <CalculatorField
+              help="100% means taking the full premium back as a policy loan."
+              label="Policy loan taken back (%)"
+              min="0"
+              name="loanPercent"
+              onChange={handleInputChange}
+              step="0.01"
+              value={inputs.loanPercent}
+            />
+            <CalculatorField
+              help="Participating policy loan rate charged."
+              label="Policy loan rate (%)"
+              min="0"
+              name="loanRate"
+              onChange={handleInputChange}
+              step="0.01"
+              value={inputs.loanRate}
+            />
+            <CalculatorField
+              help="Illustrated crediting rate, not guaranteed."
+              label="Crediting rate (%)"
+              min="0"
+              name="creditingRate"
+              onChange={handleInputChange}
+              step="0.01"
+              value={inputs.creditingRate}
+            />
+            <CalculatorField
+              help="Base face amount / death benefit."
+              label="Face amount / death benefit"
+              min="0"
+              name="faceAmount"
+              onChange={handleInputChange}
+              value={inputs.faceAmount}
+            />
+            <CalculatorField
+              label="Issue age"
+              min="0"
+              name="issueAge"
+              onChange={handleInputChange}
+              value={inputs.issueAge}
+            />
+            <CalculatorField
+              label="Policy fee per month"
+              min="0"
+              name="policyFeeMonthly"
+              onChange={handleInputChange}
+              step="0.01"
+              value={inputs.policyFeeMonthly}
+            />
+            <CalculatorSelect
+              help="COI rates are based on the sheet's lookup table."
+              label="Rate class"
+              name="rateClass"
+              onChange={handleInputChange}
+              options={[
+                { label: 'Preferred Plus', value: 'preferredPlus' },
+                { label: 'Standard Nontobacco', value: 'standard' },
+                { label: 'Preferred Nontobacco', value: 'preferred' },
+              ]}
+              value={inputs.rateClass}
+            />
+            <CalculatorField
+              label="Premium load - Year 1 (%)"
+              min="0"
+              name="premiumLoadYearOne"
+              onChange={handleInputChange}
+              step="0.01"
+              value={inputs.premiumLoadYearOne}
+            />
+            <CalculatorField
+              label="Premium load - Years 2+ (%)"
+              min="0"
+              name="premiumLoadRenewal"
+              onChange={handleInputChange}
+              step="0.01"
+              value={inputs.premiumLoadRenewal}
+            />
+            <CalculatorSelect
+              help="Increasing matches the sheet's default illustration."
+              label="Death benefit option"
+              name="deathBenefitOption"
+              onChange={handleInputChange}
+              options={[
+                { label: 'Increasing', value: 'increasing' },
+                { label: 'Level', value: 'level' },
+              ]}
+              value={inputs.deathBenefitOption}
+            />
+            <div className="calculator-readonly">
+              <span>Per-unit expense charge</span>
+              <strong>{formatCurrency(projection.perUnitRate)}</strong>
+              <small>Per $1,000 of face, first 15 policy years.</small>
+            </div>
+          </div>
+          <button className="btn navy calculator-reset" onClick={resetCalculator} type="button">
+            Reset Defaults
+          </button>
+        </aside>
+
+        <div className="calculator-results">
+          <div className="calculator-results-hero">
+            <p className="eyebrow">Bottom Line</p>
+            <h2>Illustrated 30-Year Outcome</h2>
+            <p>
+              Money in, participating policy loan back out, while the policy keeps
+              growing on the full amount.
+            </p>
+          </div>
+          <div className="calculator-metrics">
+            <SummaryMetric
+              featured
+              label="Net gain over 30 years"
+              value={formatCurrency(totals.netGain)}
+            />
+            <SummaryMetric label="Total premium funded" value={formatCurrency(totals.premiumFunded)} />
+            <SummaryMetric
+              label="Total policy loans taken back"
+              value={formatCurrency(totals.policyLoansTaken)}
+            />
+            <SummaryMetric
+              label="Total policy growth"
+              value={formatCurrency(totals.policyGrowth)}
+            />
+            <SummaryMetric label="Total cost" value={formatCurrency(totals.totalCost)} />
+            <SummaryMetric
+              label="$ earned per $1 charged"
+              value={formatDecimal(totals.earnedPerDollarCharged, 3)}
+            />
+            <SummaryMetric label="Cash value at year 30" value={formatCurrency(finalYear.cashValue)} />
+            <SummaryMetric label="Policy loans at year 30" value={formatCurrency(finalYear.policyLoans)} />
+            <SummaryMetric label="Net equity at year 30" value={formatCurrency(finalYear.netEquity)} />
+            <SummaryMetric label="Death benefit at year 30" value={formatCurrency(finalYear.deathBenefit)} />
+            <SummaryMetric
+              label="Net death benefit at year 30"
+              value={formatCurrency(finalYear.netDeathBenefit)}
+            />
+          </div>
+        </div>
+      </section>
+
+      <section className="calculator-table-card" aria-label="30-year projection table">
+        <div className="calculator-card-heading">
+          <p className="eyebrow dark">Projection</p>
+          <h2>30-Year Ledger</h2>
+          <p>Scrollable on mobile for clean viewing.</p>
+        </div>
+        <div className="calculator-table-wrap">
+          <table className="calculator-table">
+            <thead>
+              <tr>
+                <th>Year</th>
+                <th>Age</th>
+                <th>Premium Funded</th>
+                <th>Policy Loan Taken</th>
+                <th>Loan Interest</th>
+                <th>COI</th>
+                <th>Total Cost</th>
+                <th>Policy Growth</th>
+                <th>Net</th>
+                <th>Cash Value</th>
+                <th>Policy Loans</th>
+                <th>Net Equity</th>
+                <th>Death Benefit</th>
+                <th>Net Death Benefit</th>
+              </tr>
+            </thead>
+            <tbody>
+              {projection.rows.map((row) => (
+                <tr key={row.year}>
+                  <td>{row.year}</td>
+                  <td>{row.age}</td>
+                  <td>{formatCurrency(row.premium)}</td>
+                  <td>{formatCurrency(row.policyLoanTaken)}</td>
+                  <td>{formatCurrency(row.loanInterest)}</td>
+                  <td>{formatCurrency(row.coi)}</td>
+                  <td>{formatCurrency(row.totalCost)}</td>
+                  <td>{formatCurrency(row.policyGrowth)}</td>
+                  <td>{formatCurrency(row.net)}</td>
+                  <td>{formatCurrency(row.cashValue)}</td>
+                  <td>{formatCurrency(row.policyLoans)}</td>
+                  <td>{formatCurrency(row.netEquity)}</td>
+                  <td>{formatCurrency(row.deathBenefit)}</td>
+                  <td>{formatCurrency(row.netDeathBenefit)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section className="calculator-notes">
+        <p>
+          Notes: Crediting is illustrated, not guaranteed. Policy loan rates can
+          change. Keep premiums under the 7-pay limit or the policy may become a MEC.
+        </p>
+        <p>
+          COI is an estimate based on the calculator reference table. Replace with
+          carrier illustration details when preparing a final client review.
+        </p>
+      </section>
+    </PageShell>
+  )
+}
+
 function AppointmentsPage() {
   return (
     <PageShell
@@ -1298,10 +1839,10 @@ function NotFoundPage() {
 }
 
 function App() {
-  const [path, setPath] = useState(window.location.pathname)
+  const [path, setPath] = useState(normalizePath(window.location.pathname))
 
   useEffect(() => {
-    const handlePopState = () => setPath(window.location.pathname)
+    const handlePopState = () => setPath(normalizePath(window.location.pathname))
     window.addEventListener('popstate', handlePopState)
     return () => window.removeEventListener('popstate', handlePopState)
   }, [])
@@ -1318,6 +1859,8 @@ function App() {
         return <TrainingPage />
       case '/office':
         return <VirtualOfficePage />
+      case '/calculator':
+        return <CalculatorPage />
       case '/appointments':
         return <AppointmentsPage />
       case '/crm':
